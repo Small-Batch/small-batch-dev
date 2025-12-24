@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Small Batch Apps | Hand-Crafted Tools for Jira Cloud</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Varela+Round&display=swap"
@@ -522,9 +523,9 @@
 
         .philosophy-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -532,7 +533,7 @@
             background: var(--vintage-paper);
             border: 3px solid var(--slate-ink);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 2rem;
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -993,6 +994,12 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .philosophy-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 900px) {
             .product-card {
                 grid-template-columns: 1fr;
@@ -1030,6 +1037,10 @@
         }
 
         @media (max-width: 600px) {
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+            }
+
             nav {
                 padding: 1rem;
             }
@@ -1067,7 +1078,7 @@
     <!-- Navigation -->
     <nav>
         <a href="#" class="logo">
-            <img class="navbar-logo" src="media/small-batch-logo-nobg.png" alt="">
+            <img class="navbar-logo" src="media/small-batch-box.png" alt="">
             <span class="logo-text">Small Batch Apps</span>
         </a>
         <ul class="nav-links">
@@ -1109,6 +1120,11 @@
     <!-- Ticker Tape -->
     <div class="ticker">
         <div class="ticker-content">
+            <div class="ticker-item"><span class="star">★</span> Zero Bloat</div>
+            <div class="ticker-item"><span class="star">★</span> Privacy First</div>
+            <div class="ticker-item"><span class="star">★</span> Human-Centric</div>
+            <div class="ticker-item"><span class="star">★</span> Playful Utility</div>
+            <div class="ticker-item"><span class="star">★</span> Built on Forge</div>
             <div class="ticker-item"><span class="star">★</span> Zero Bloat</div>
             <div class="ticker-item"><span class="star">★</span> Privacy First</div>
             <div class="ticker-item"><span class="star">★</span> Human-Centric</div>
@@ -1184,7 +1200,7 @@
                     </ul>
                     <div class="product-cta">
                         <a href="https://marketplace.atlassian.com/apps/97019463" class="btn btn-primary"
-                            target="_blank">Get it Free →</a>
+                            target="_blank">Get it for Jira →</a>
                     </div>
                 </div>
             </div>
