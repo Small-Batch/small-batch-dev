@@ -570,6 +570,10 @@
             width: 360px;
         }
 
+        product-logo-small {
+            width: 128px;
+        }
+
         .products-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -699,6 +703,10 @@
             background: var(--pure-white);
             border-top: 3px solid var(--slate-ink);
             border-bottom: 3px solid var(--slate-ink);
+        }
+
+        .header-icon {
+            width: 80px;
         }
 
         .workshop {
@@ -1241,17 +1249,7 @@
         <div class="workshop">
             <div class="workbench">
                 <div class="workbench-header">
-                    <svg class="workbench-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Wrench/tool character -->
-                        <path d="M30 80 L70 40" stroke="#2C3E50" stroke-width="8" stroke-linecap="round" />
-                        <circle cx="75" cy="35" r="18" fill="none" stroke="#2C3E50" stroke-width="6" />
-                        <circle cx="75" cy="35" r="8" fill="#FFBF00" />
-                        <!-- Pie-cut eyes on the handle -->
-                        <circle cx="40" cy="68" r="5" fill="#2C3E50" />
-                        <path d="M40 63 L40 68 L45 68" fill="#FDFDD0" />
-                        <!-- Smile -->
-                        <path d="M32 75 Q38 80 44 75" stroke="#2C3E50" stroke-width="2" fill="none" />
-                    </svg>
+                    <img class="header-icon" src="media/wand.png" alt="">
                     <div>
                         <h3>The Backlog</h3>
                         <p>Sneak peek at what's cooking in our workshop</p>
@@ -1259,22 +1257,7 @@
                 </div>
                 <div class="blueprints">
                     <div class="blueprint-card sky">
-                        <svg class="preview-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Gavel/decision maker -->
-                            <rect x="45" y="60" width="10" height="35" fill="#87CEEB" stroke="#2C3E50" stroke-width="3"
-                                rx="2" />
-                            <rect x="25" y="45" width="50" height="20" fill="#87CEEB" stroke="#2C3E50" stroke-width="3"
-                                rx="5" />
-                            <!-- Face -->
-                            <circle cx="40" cy="52" r="4" fill="#2C3E50" />
-                            <path d="M40 48 L40 52 L44 52" fill="#FDFDD0" />
-                            <circle cx="60" cy="52" r="4" fill="#2C3E50" />
-                            <path d="M60 48 L60 52 L64 52" fill="#FDFDD0" />
-                            <path d="M45 58 Q50 62 55 58" stroke="#2C3E50" stroke-width="2" fill="none" />
-                            <!-- Sound waves -->
-                            <path d="M78 50 Q85 55 78 60" stroke="#2C3E50" stroke-width="2" fill="none" />
-                            <path d="M82 45 Q92 55 82 65" stroke="#2C3E50" stroke-width="2" fill="none" />
-                        </svg>
+                        <img class="preview-icon" src="media/simple-decisions-for-jira-nobg-small.png" alt="">
                         <h4>Simple Decisions</h4>
                         <span class="category">Integration Management</span>
                         <p>Log key project decisions. Never hear "but we agreed on..." again. Prevents Scope Amnesia.
@@ -1282,45 +1265,14 @@
                         <div class="accent-bar"></div>
                     </div>
                     <div class="blueprint-card lavender">
-                        <svg class="preview-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- People/stakeholder grid -->
-                            <rect x="20" y="20" width="60" height="60" fill="none" stroke="#2C3E50" stroke-width="3"
-                                rx="5" />
-                            <line x1="50" y1="20" x2="50" y2="80" stroke="#2C3E50" stroke-width="2"
-                                stroke-dasharray="4" />
-                            <line x1="20" y1="50" x2="80" y2="50" stroke="#2C3E50" stroke-width="2"
-                                stroke-dasharray="4" />
-                            <!-- Person icons in quadrants -->
-                            <circle cx="35" cy="35" r="8" fill="#E6E6FA" stroke="#2C3E50" stroke-width="2" />
-                            <circle cx="35" cy="33" r="3" fill="#2C3E50" />
-                            <circle cx="65" cy="35" r="8" fill="#E6E6FA" stroke="#2C3E50" stroke-width="2" />
-                            <circle cx="65" cy="33" r="3" fill="#2C3E50" />
-                            <circle cx="35" cy="65" r="8" fill="#E6E6FA" stroke="#2C3E50" stroke-width="2" />
-                            <circle cx="35" cy="63" r="3" fill="#2C3E50" />
-                            <!-- Star for key stakeholder -->
-                            <polygon points="65,60 67,66 73,66 68,70 70,76 65,72 60,76 62,70 57,66 63,66" fill="#FFBF00"
-                                stroke="#2C3E50" stroke-width="1" />
-                        </svg>
+                        <img class="preview-icon" src="media/simple-stakeholders-for-jira-nobg-small.png" alt="">
                         <h4>Simple Stakeholders</h4>
                         <span class="category">Stakeholder Management</span>
                         <p>Map political influence with a Power vs. Interest grid. Know who to keep close.</p>
                         <div class="accent-bar"></div>
                     </div>
                     <div class="blueprint-card lemon">
-                        <svg class="preview-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Mystery box with question mark -->
-                            <rect x="25" y="35" width="50" height="45" fill="#FFFACD" stroke="#2C3E50" stroke-width="3"
-                                rx="5" />
-                            <path d="M35 35 Q50 20 65 35" stroke="#2C3E50" stroke-width="3" fill="none" />
-                            <!-- Question mark -->
-                            <text x="50" y="68" font-family="Space Mono, monospace" font-size="30" fill="#2C3E50"
-                                text-anchor="middle">?</text>
-                            <!-- Sparkles around -->
-                            <circle cx="20" cy="45" r="3" fill="#FFBF00" />
-                            <circle cx="80" cy="50" r="3" fill="#FFBF00" />
-                            <circle cx="75" cy="75" r="2" fill="#FFBF00" />
-                            <circle cx="25" cy="70" r="2" fill="#FFBF00" />
-                        </svg>
+                        <img class="preview-icon" src="media/question.png" alt="">
                         <h4>Your Idea Here?</h4>
                         <span class="category">Community</span>
                         <p>Got a "papercut" that needs solving? We're all ears. The best tools come from real problems.
@@ -1353,8 +1305,8 @@
                 <h3>Hello, I'm Vitalii!</h3>
                 <p>By day, I'm a Senior Game Producer navigating the chaos of game development. By night (and
                     weekends), I build the tools I wish I had.</p>
-                <p>Every app in the Small Batch suite is born from my own project management experience. I don't build 
-                    tools just to exist—I build each one to address a very specific pain point that I've experienced 
+                <p>Every app in the Small Batch suite is born from my own project management experience. I don't build
+                    tools just to exist—I build each one to address a very specific pain point that I've experienced
                     myself. These are tools I use daily and wish I always had.</p>
                 <p>After years of wrestling with bloated enterprise plugins that promise everything and deliver
                     complexity, I decided to take matters into my own hands. The "Simple" suite is my answer: focused
