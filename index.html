@@ -547,6 +547,8 @@
         .philosophy-card .icon {
             width: 64px;
             height: 64px;
+            max-width: 100%;
+            height: auto;
             margin-bottom: 1.5rem;
             animation: wave 3s ease-in-out infinite;
         }
@@ -567,7 +569,9 @@
         }
 
         .product-logo {
-            width: 360px;
+            width: 100%;
+            max-width: 360px;
+            height: auto;
         }
 
         product-logo-small {
@@ -591,6 +595,7 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 100%;
         }
 
         .product-card:hover {
@@ -658,6 +663,8 @@
         .product-info h3 {
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .product-info .subtitle {
@@ -671,6 +678,8 @@
             font-size: 1.1rem;
             line-height: 1.7;
             margin-bottom: 1.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .feature-list {
@@ -707,6 +716,8 @@
 
         .header-icon {
             width: 80px;
+            max-width: 100%;
+            height: auto;
         }
 
         .workshop {
@@ -766,6 +777,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
+            justify-items: center;
         }
 
         .blueprint-card {
@@ -777,6 +789,8 @@
             position: relative;
             transition: all 0.3s ease;
             opacity: 0.85;
+            width: 100%;
+            max-width: 350px;
         }
 
         .blueprint-card:hover {
@@ -789,6 +803,8 @@
         .blueprint-card .preview-icon {
             width: 100px;
             height: 100px;
+            max-width: 100%;
+            height: auto;
             margin: 0 auto 1.5rem;
             opacity: 0.7;
             filter: grayscale(0.5);
@@ -1079,6 +1095,46 @@
                 width: 200px;
                 height: 200px;
             }
+
+            .product-card {
+                padding: 2rem 1.5rem;
+                gap: 2rem;
+            }
+
+            .product-info h3 {
+                font-size: 1.8rem;
+            }
+
+            .product-info p {
+                font-size: 1rem;
+            }
+
+            .product-logo {
+                max-width: 280px;
+            }
+
+            .workbench {
+                padding: 2rem 1.5rem;
+            }
+
+            .workbench-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .workbench-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .blueprints {
+                grid-template-columns: 1fr;
+            }
+
+            .blueprint-card {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -1106,7 +1162,7 @@
             <div class="shape"></div>
         </div>
 
-        <img class="title-logo" src="media/small-batch-logo-nobg.png" alt="">
+        <img class="hero-mascot" src="media/small-batch-logo-nobg.png" alt="">
 
         <h1>
             <span class="highlight">Hand-crafted</span> tools<br>
@@ -1364,6 +1420,8 @@
         // Subtle parallax on hero mascot
         document.addEventListener('mousemove', (e) => {
             const mascot = document.querySelector('.hero-mascot');
+            if (!mascot) return;
+
             const rect = mascot.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
