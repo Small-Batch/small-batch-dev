@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found | Small Batch Apps</title>
+    <meta name="description" content="The page you're looking for doesn't exist.">
+    <meta name="theme-color" content="#fdfdd0">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="media/apple-touch-icon.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Varela+Round&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --slate-ink: #2c3e50;
+        --vintage-paper: #fdfdd0;
+        --craft-amber: #ffbf00;
+        --text-secondary: #5d6d7e;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Varela Round", sans-serif;
+        background-color: var(--vintage-paper);
+        color: var(--slate-ink);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      h1, h2, .mono {
+        font-family: "Space Mono", monospace;
+      }
+
+      .container {
+        max-width: 500px;
+      }
+
+      .mascot {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 2rem;
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(-2deg); }
+        50% { transform: translateY(-15px) rotate(2deg); }
+      }
+
+      .error-code {
+        font-size: 6rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 1rem;
+        color: var(--craft-amber);
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        font-family: "Space Mono", monospace;
+        font-size: 1rem;
+        text-decoration: none;
+        border: 3px solid var(--slate-ink);
+        border-radius: 50px;
+        background: var(--slate-ink);
+        color: var(--vintage-paper);
+        transition: all 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 0 var(--slate-ink);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <img class="mascot" src="media/small-batch-logo-nobg.png" alt="Small Batch Apps mascot" />
+      <div class="error-code mono">404</div>
+      <h1>Page not found</h1>
+      <p>
+        Looks like this page wandered off. Maybe it's on a coffee break?
+        Let's get you back to familiar territory.
+      </p>
+      <a href="/" class="btn">
+        <span>Back to Home</span>
+        <span>→</span>
+      </a>
+    </div>
+  </body>
+</html>
