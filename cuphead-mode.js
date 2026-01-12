@@ -195,8 +195,8 @@
 
   // ===== CURSOR STATE TRACKING =====
   
-  // Interactive elements - hover state
-  document.querySelectorAll('.btn, .product-card, .philosophy-card, .blueprint-card, .nav-links a, .footer-links a').forEach(el => {
+  // Interactive elements - hover state (only actual clickable elements)
+  document.querySelectorAll('.btn, .nav-links a, .footer-links a').forEach(el => {
     el.addEventListener('mouseenter', () => {
       targetScale = 1.5;
       cursorDot.style.borderColor = 'var(--accent-coral)';
