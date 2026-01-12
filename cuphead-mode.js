@@ -55,6 +55,7 @@
   const particles = [];
   const destroyedElements = new Set();
   const elementHP = new Map(); // Track HP for each destructible element
+  let gameStarted = false; // Track if game has started in current session
 
   // ===== CREATE DOM ELEMENTS =====
   
@@ -281,6 +282,16 @@
     if (typeof window.incrementGlobalShots === 'function') {
       window.incrementGlobalShots();
     }
+
+    // Analytics: Game start
+    if (!gameStarted) {
+      gameStarted = true;
+      if (typeof window.logBatchEvent === 'function') {
+        window.logBatchEvent('game_start', {
+          device: 'desktop'
+        });
+      }
+    }
   }
 
   // ===== PARTICLE EXPLOSION =====
@@ -455,6 +466,15 @@
     setTimeout(() => {
       el.style.visibility = 'hidden';
     }, 200);
+
+    // Analytics: Element destroyed
+    if (typeof window.logBatchEvent === 'function') {
+      const elementId = el.textContent.trim().substring(0, 50) || el.getAttribute('alt') || 'unknown';
+      window.logBatchEvent('element_destroyed', {
+        element_type: el.tagName.toLowerCase(),
+        element_identifier: elementId
+      });
+    }
   }
 
   // ===== UPDATE LOOPS =====

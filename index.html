@@ -388,7 +388,7 @@
     // Import Firebase modules
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js';
     import { getDatabase, ref, onValue, runTransaction } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js';
-    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js';
+    import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js';
     
     // TODO: Replace with your Firebase config from Firebase Console
     const firebaseConfig = {
@@ -434,6 +434,50 @@
         return (current || 0) + 1;
       });
     };
+
+    // Expose logEvent globally for other scripts to use
+    window.logBatchEvent = function(eventName, eventParams = {}) {
+      if (!isProduction) {
+        console.log(`[Analytics-Dev] Event: ${eventName}`, eventParams);
+        return;
+      }
+      logEvent(analytics, eventName, eventParams);
+    };
+
+    // --- Automatic tracking for key elements ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Track clicks on primary and secondary calls to action
+      document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const text = this.textContent.trim().split('\n')[0]; // Get the first line if multiple
+          window.logBatchEvent('button_click', {
+            button_text: text,
+            button_type: this.classList.contains('btn-primary') ? 'primary' : 'secondary',
+            location: window.location.pathname
+          });
+        });
+      });
+
+      // Track clicks on marketplace links
+      document.querySelectorAll('a[href*="marketplace.atlassian.com"]').forEach(link => {
+        link.addEventListener('click', function() {
+          const href = this.getAttribute('href');
+          window.logBatchEvent('marketplace_click', {
+            url: href,
+            link_text: this.textContent.trim()
+          });
+        });
+      });
+
+      // Track navigation link clicks
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+          window.logBatchEvent('nav_click', {
+            link_text: this.textContent.trim()
+          });
+        });
+      });
+    });
   </script>
 
   <script>
