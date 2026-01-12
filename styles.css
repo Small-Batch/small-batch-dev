@@ -12,6 +12,7 @@
   --pastel-sky: #D4EDFF;
   --pastel-lavender: #E8DDFF;
   --pastel-lemon: #FFF5CC;
+  --pastel-heart: #EFB7BC;
 
   /* Accent colors (for small touches) */
   --accent-green: #27AE60;
@@ -27,6 +28,16 @@
   /* Semantic */
   --text-primary: var(--ink);
   --text-secondary: var(--ink-light);
+
+  /* Cuphead-style easing curves for spring physics */
+  --ease-squash: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Overshoot */
+  --ease-stretch: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Bounce in */
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Elastic */
+  --ease-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  /* Big bounce */
 }
 
 * {
@@ -44,11 +55,14 @@ body {
   background-color: var(--paper);
   color: var(--text-primary);
   overflow-x: hidden;
-  cursor: url("media/cursor.png") 12 12,
+  cursor: url("media/cursors/cursor.png") 7 5,
     auto;
+  /* Vintage screen flicker */
+  animation: vintageFlicker 8s infinite;
+  will-change: filter;
 }
 
-/* ===== PAPER TEXTURE OVERLAY ===== */
+/* ===== PAPER TEXTURE OVERLAY WITH VIGNETTE ===== */
 body::before {
   content: "";
   position: fixed;
@@ -60,6 +74,25 @@ body::before {
   opacity: 0.05;
   z-index: 1000;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  /* Vignette effect for old film look */
+  box-shadow: inset 0 0 200px 100px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== ANIMATED FILM GRAIN OVERLAY ===== */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='vintageNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='0 0 1 1 1 1 0 0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23vintageNoise)'/%3E%3C/svg%3E");
+  animation: grainFlicker 0.2s steps(2) infinite;
+  mix-blend-mode: overlay;
+  opacity: 0.3;
+  will-change: transform;
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -77,22 +110,48 @@ h3,
 
 /* ===== ANIMATIONS ===== */
 @keyframes rubberBounce {
-
-  0%,
-  100% {
+  0% {
     transform: scaleY(1) scaleX(1);
   }
 
-  25% {
-    transform: scaleY(1.08) scaleX(0.96);
+  10% {
+    transform: scaleY(1.15) scaleX(0.85);
+  }
+
+  20% {
+    transform: scaleY(0.85) scaleX(1.15);
+  }
+
+  30% {
+    transform: scaleY(1.08) scaleX(0.92);
+  }
+
+  40% {
+    transform: scaleY(0.92) scaleX(1.08);
   }
 
   50% {
+    transform: scaleY(1.04) scaleX(0.96);
+  }
+
+  60% {
     transform: scaleY(0.96) scaleX(1.04);
   }
 
-  75% {
-    transform: scaleY(1.04) scaleX(0.98);
+  70% {
+    transform: scaleY(1.02) scaleX(0.98);
+  }
+
+  80% {
+    transform: scaleY(0.98) scaleX(1.02);
+  }
+
+  90% {
+    transform: scaleY(1.01) scaleX(0.99);
+  }
+
+  100% {
+    transform: scaleY(1) scaleX(1);
   }
 }
 
@@ -277,6 +336,157 @@ h3,
   }
 }
 
+/* ===== CUPHEAD MODE: VINTAGE FILM ANIMATIONS ===== */
+@keyframes grainFlicker {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-2px, 1px);
+  }
+
+  20% {
+    transform: translate(1px, -2px);
+  }
+
+  30% {
+    transform: translate(-1px, 2px);
+  }
+
+  40% {
+    transform: translate(2px, -1px);
+  }
+
+  50% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(1px, 2px);
+  }
+
+  70% {
+    transform: translate(-1px, -1px);
+  }
+
+  80% {
+    transform: translate(2px, 1px);
+  }
+
+  90% {
+    transform: translate(-2px, 2px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes vintageFlicker {
+
+  0%,
+  100% {
+    filter: brightness(1) contrast(1);
+  }
+
+  5% {
+    filter: brightness(0.97) contrast(1.03);
+  }
+
+  10% {
+    filter: brightness(1.02) contrast(0.98);
+  }
+
+  15% {
+    filter: brightness(0.98) contrast(1.01);
+  }
+
+  20% {
+    filter: brightness(1.01) contrast(0.99);
+  }
+
+  25% {
+    filter: brightness(0.99) contrast(1.02);
+  }
+
+  30% {
+    filter: brightness(1) contrast(1);
+  }
+}
+
+/* ===== CUPHEAD MODE: BOILING LINE ANIMATION ===== */
+@keyframes boilingOutline {
+  0% {
+    filter: drop-shadow(2px 2px 0 var(--ink)) drop-shadow(-1px 1px 0 var(--ink)) contrast(1.05);
+  }
+
+  25% {
+    filter: drop-shadow(1px 3px 0 var(--ink)) drop-shadow(-2px 0px 0 var(--ink)) contrast(1.08);
+  }
+
+  50% {
+    filter: drop-shadow(3px 1px 0 var(--ink)) drop-shadow(-1px 2px 0 var(--ink)) contrast(1.06);
+  }
+
+  75% {
+    filter: drop-shadow(2px 2px 0 var(--ink)) drop-shadow(-2px 1px 0 var(--ink)) contrast(1.07);
+  }
+
+  100% {
+    filter: drop-shadow(2px 2px 0 var(--ink)) drop-shadow(-1px 1px 0 var(--ink)) contrast(1.05);
+  }
+}
+
+/* ===== CUPHEAD MODE: MICRO-INTERACTIONS ===== */
+@keyframes squashHover {
+  0% {
+    transform: translateY(0) scaleY(1) scaleX(1);
+  }
+
+  50% {
+    transform: translateY(-5px) scaleY(1.05) scaleX(0.98);
+  }
+
+  100% {
+    transform: translateY(-8px) scaleY(1.02) scaleX(0.99);
+  }
+}
+
+@keyframes buttonPress {
+  0% {
+    transform: scale(1) scaleY(1);
+  }
+
+  50% {
+    transform: scale(0.92) scaleY(0.95);
+  }
+
+  100% {
+    transform: scale(0.95) scaleY(0.98);
+  }
+}
+
+@keyframes iconWobble {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-15deg) scale(1.1);
+  }
+
+  50% {
+    transform: rotate(15deg) scale(1.15);
+  }
+
+  75% {
+    transform: rotate(-10deg) scale(1.08);
+  }
+}
+
 /* ===== NAVIGATION ===== */
 nav {
   position: fixed;
@@ -304,7 +514,9 @@ nav {
 .logo-icon {
   width: 48px;
   height: 48px;
-  animation: rubberBounce 2s ease-in-out infinite;
+  animation: rubberBounce 2s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+  will-change: transform, filter;
 }
 
 .logo-text {
@@ -359,12 +571,31 @@ nav {
   background: transparent;
 }
 
+/* Scanlines for vintage film effect */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 2px);
+}
+
 .hero-mascot {
   width: 280px;
   height: 280px;
   margin-bottom: 2rem;
-  animation: float 4s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
   filter: drop-shadow(4px 4px 0 var(--ink-faint));
+  will-change: transform, filter;
 }
 
 .hero h1 {
@@ -387,7 +618,7 @@ nav {
   right: -4px;
   bottom: 4px;
   height: 12px;
-  background: var(--pastel-lemon);
+  background: var(--pastel-heart);
   z-index: -1;
   transform: rotate(-1deg);
 }
@@ -405,6 +636,25 @@ nav {
   padding-bottom: 0.05em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+  animation: underlineBoil 0.6s steps(3) infinite;
+}
+
+@keyframes underlineBoil {
+  0% {
+    background-position: 0 100%;
+  }
+
+  33% {
+    background-position: 1px calc(100% - 0.5px);
+  }
+
+  66% {
+    background-position: -1px 100%;
+  }
+
+  100% {
+    background-position: 0 100%;
+  }
 }
 
 /* Wavy underline variant 1 - gentle wave */
@@ -462,7 +712,7 @@ nav {
   text-decoration: none;
   border: 2px solid var(--ink);
   border-radius: 50px;
-  transition: all 0.2s ease;
+  transition: all 0.4s var(--ease-bounce);
   position: relative;
 }
 
@@ -472,8 +722,8 @@ nav {
 }
 
 .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 4px 4px 0 var(--ink-faint);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 6px 6px 0 var(--ink-faint);
 }
 
 .btn-secondary {
@@ -484,7 +734,13 @@ nav {
 .btn-secondary:hover {
   background: var(--ink);
   color: var(--paper);
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Button press animation */
+.btn:active {
+  animation: buttonPress 0.2s var(--ease-bounce) forwards;
+  transform: scale(0.95) translateY(2px) !important;
 }
 
 .btn-compact {
@@ -548,6 +804,24 @@ section::before {
 .philosophy {
   background: transparent;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Scanlines for vintage film effect */
+.philosophy::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 2px);
 }
 
 .philosophy-grid {
@@ -563,7 +837,7 @@ section::before {
   padding: 2rem 1.5rem;
   text-align: center;
   position: relative;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s var(--ease-squash);
   /* Initial hidden state - off-screen to the right */
   opacity: 0;
   transform: translateX(100vw);
@@ -571,11 +845,11 @@ section::before {
 
 /* Slide-in animation triggered by scroll */
 .philosophy-card.slide-in {
-  animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: slideInFromRight 0.8s var(--ease-elastic) forwards;
 }
 
 .philosophy-card.slide-in:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
 }
 
 .philosophy-card img {
@@ -585,22 +859,55 @@ section::before {
   filter: drop-shadow(3px 3px 0 var(--ink-faint));
 }
 
-/* Unique icon animations */
+/* Icon wobbles when card is hovered */
+.philosophy-card:hover img {
+  animation: iconWobble 0.5s var(--ease-elastic) forwards,
+    featherFloat 4s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+}
+
+.philosophy-card:hover img.icon-heart {
+  animation: iconWobble 0.5s var(--ease-elastic) forwards,
+    heartbeat 1.5s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+}
+
+.philosophy-card:hover img.icon-spark {
+  animation: iconWobble 0.5s var(--ease-elastic) forwards,
+    wheelSpin 4s cubic-bezier(0.25, 0.1, 0.25, 1) infinite,
+    boilingOutline 0.5s steps(4) infinite;
+}
+
+.philosophy-card:hover img.icon-lock {
+  animation: iconWobble 0.5s var(--ease-elastic) forwards,
+    lockShake 2s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+}
+
+/* Unique icon animations with boiling effect */
 .philosophy-card img.icon-feather {
-  animation: featherFloat 4s ease-in-out infinite;
+  animation: featherFloat 4s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+  will-change: transform, filter;
 }
 
 .philosophy-card img.icon-heart {
-  animation: heartbeat 1.5s ease-in-out infinite;
+  animation: heartbeat 1.5s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+  will-change: transform, filter;
 }
 
 .philosophy-card img.icon-spark {
-  animation: wheelSpin 4s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation: wheelSpin 4s cubic-bezier(0.25, 0.1, 0.25, 1) infinite,
+    boilingOutline 0.5s steps(4) infinite;
+  will-change: transform, filter;
 }
 
 .philosophy-card img.icon-lock {
-  animation: lockShake 2s ease-in-out infinite;
-  animation-delay: 0.5s;
+  animation: lockShake 2s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
+  animation-delay: 0.5s, 0s;
+  will-change: transform, filter;
 }
 
 .philosophy-card h3 {
@@ -618,12 +925,32 @@ section::before {
 /* ===== PRODUCTS SECTION ===== */
 .products {
   background: transparent;
+  position: relative;
+}
+
+/* Scanlines for vintage film effect */
+.products::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 2px);
 }
 
 .product-logo {
   width: 100%;
   max-width: 320px;
   height: auto;
+  animation: boilingOutline 0.5s steps(4) infinite;
+  will-change: filter;
 }
 
 .products-container {
@@ -642,12 +969,12 @@ section::before {
   border-radius: 20px;
   position: relative;
   background: var(--paper-warm);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.5s var(--ease-squash), box-shadow 0.5s var(--ease-squash);
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 6px 6px 0 var(--ink-faint);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 8px 8px 0 var(--ink-faint);
 }
 
 .product-card:nth-child(even) {
@@ -982,8 +1309,10 @@ footer {
   width: 70px;
   height: 70px;
   margin: 0 auto 1.5rem;
-  animation: float 4s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite,
+    boilingOutline 0.5s steps(4) infinite;
   filter: drop-shadow(3px 3px 0 var(--ink-faint));
+  will-change: transform, filter;
 }
 
 .footer-tagline {
@@ -1071,6 +1400,16 @@ footer {
   }
 }
 
+@media (max-width: 900px) {
+
+  /* Reduce film grain on mobile for performance */
+  body::after {
+    opacity: 0.15;
+    animation: none;
+    /* Static grain on mobile */
+  }
+}
+
 @media (max-width: 600px) {
   .philosophy-grid {
     grid-template-columns: 1fr;
@@ -1140,5 +1479,75 @@ footer {
 
   .blueprints {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ===== CUPHEAD MODE: CURSOR INTERACTIONS ===== */
+/* Interactive elements get excited cursor */
+.btn,
+.nav-links a,
+.footer-links a,
+.product-card,
+.blueprint-card {
+  cursor: url("media/cursors/cursor-hover.png") 7 5, pointer;
+}
+
+/* Text areas get thinking cursor */
+input,
+textarea,
+[contenteditable] {
+  cursor: url("media/cursors/cursor-text.png") 7 5, text;
+}
+
+/* Clicking state */
+.btn:active,
+.product-card:active {
+  cursor: url("media/cursors/cursor-click.png") 24 24, pointer;
+}
+
+/* Cursor follower circle */
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: border-color 0.3s var(--ease-elastic);
+  mix-blend-mode: difference;
+  animation: boilingOutline 0.4s steps(3) infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* Hide cursor follower on mobile */
+@media (max-width: 900px),
+(pointer: coarse) {
+  .cursor-follower {
+    display: none;
+  }
+}
+
+/* ===== ACCESSIBILITY: REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  body {
+    animation: none !important;
+  }
+
+  body::after {
+    animation: none !important;
+  }
+
+  .cursor-follower {
+    animation: none !important;
   }
 }

@@ -33,6 +33,10 @@
 
   <!-- Preload critical assets -->
   <link rel="preload" href="media/small-batch-logo-nobg.png" as="image">
+  <!-- Cuphead mode: Preload cursor assets -->
+  <link rel="preload" href="media/cursor-hover.png" as="image">
+  <link rel="preload" href="media/cursor-click.png" as="image">
+  <link rel="preload" href="media/cursor-text.png" as="image">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -375,7 +379,48 @@
   </footer>
 
   <script>
-    // Subtle parallax on hero mascot
+    // ===== CUPHEAD MODE: SPRING PHYSICS CLASS =====
+    class SpringPhysics {
+      constructor(stiffness = 170, damping = 26, mass = 1) {
+        this.stiffness = stiffness;
+        this.damping = damping;
+        this.mass = mass;
+        this.position = 0;
+        this.velocity = 0;
+        this.target = 0;
+      }
+
+      update(deltaTime) {
+        const springForce = -this.stiffness * (this.position - this.target);
+        const dampingForce = -this.damping * this.velocity;
+        const acceleration = (springForce + dampingForce) / this.mass;
+
+        this.velocity += acceleration * deltaTime;
+        this.position += this.velocity * deltaTime;
+
+        return this.position;
+      }
+
+      setTarget(target) {
+        this.target = target;
+      }
+    }
+
+    // ===== ENHANCED PARALLAX WITH SPRING PHYSICS =====
+    const mascotSpringX = new SpringPhysics(100, 20);
+    const mascotSpringY = new SpringPhysics(100, 20);
+
+    function updateMascotParallax() {
+      const mascot = document.querySelector(".hero-mascot");
+      if (!mascot) return;
+
+      const x = mascotSpringX.update(0.016);
+      const y = mascotSpringY.update(0.016);
+
+      mascot.style.transform = `translate(${x}px, ${y}px)`;
+      requestAnimationFrame(updateMascotParallax);
+    }
+
     document.addEventListener("mousemove", (e) => {
       const mascot = document.querySelector(".hero-mascot");
       if (!mascot) return;
@@ -384,11 +429,14 @@
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      const deltaX = (e.clientX - centerX) / 50;
-      const deltaY = (e.clientY - centerY) / 50;
+      const deltaX = (e.clientX - centerX) / 30;
+      const deltaY = (e.clientY - centerY) / 30;
 
-      mascot.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+      mascotSpringX.setTarget(deltaX);
+      mascotSpringY.setTarget(deltaY);
     });
+
+    updateMascotParallax();
 
     // Animate elements on scroll
     const observerOptions = {
@@ -475,6 +523,60 @@
       const offset = -0.05 + Math.random() * 0.1;
       el.style.setProperty('--underline-offset', `${offset}em`);
     });
+
+    // ===== CUPHEAD MODE: CURSOR FOLLOWER =====
+    // Only create cursor follower on desktop with mouse
+    if (window.innerWidth > 900 && !('ontouchstart' in window)) {
+      const cursorDot = document.createElement('div');
+      cursorDot.className = 'cursor-follower';
+      // Append to documentElement (html tag) instead of body
+      // because body has filter animation which creates a containing block
+      document.documentElement.appendChild(cursorDot);
+
+      // Initialize to center of viewport
+      let cursorX = window.innerWidth / 2;
+      let cursorY = window.innerHeight / 2;
+      let targetX = cursorX;
+      let targetY = cursorY;
+      let currentScale = 1;
+      let targetScale = 1;
+
+      // Track mouse position (viewport-relative)
+      document.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      });
+
+      function updateCursorFollower() {
+        // Smooth spring-like following for position
+        cursorX += (targetX - cursorX) * 0.15;
+        cursorY += (targetY - cursorY) * 0.15;
+
+        // Smooth spring-like following for scale
+        currentScale += (targetScale - currentScale) * 0.15;
+
+        // Use transform for proper fixed positioning
+        // Since position:fixed uses viewport coordinates and clientX/Y are viewport-relative,
+        // the cursor will always follow the mouse pointer regardless of scroll position
+        cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%) scale(${currentScale})`;
+        requestAnimationFrame(updateCursorFollower);
+      }
+
+      updateCursorFollower();
+
+      // Cursor reacts to hovering interactive elements
+      document.querySelectorAll('.btn, .product-card, .philosophy-card, .blueprint-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          targetScale = 1.5;
+          cursorDot.style.borderColor = 'var(--accent-coral)';
+        });
+
+        el.addEventListener('mouseleave', () => {
+          targetScale = 1;
+          cursorDot.style.borderColor = 'var(--ink)';
+        });
+      });
+    }
   </script>
 </body>
 
