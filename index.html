@@ -34,9 +34,10 @@
   <!-- Preload critical assets -->
   <link rel="preload" href="media/small-batch-logo-nobg.png" as="image">
   <!-- Cuphead mode: Preload cursor assets -->
-  <link rel="preload" href="media/cursor-hover.png" as="image">
-  <link rel="preload" href="media/cursor-click.png" as="image">
-  <link rel="preload" href="media/cursor-text.png" as="image">
+  <link rel="preload" href="media/cursors/cursor-hover.png" as="image">
+  <link rel="preload" href="media/cursors/cursor-click.png" as="image">
+  <link rel="preload" href="media/cursors/cursor-text.png" as="image">
+  <link rel="preload" href="media/cursors/cursor-shoot.png" as="image">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -565,16 +566,128 @@
       updateCursorFollower();
 
       // Cursor reacts to hovering interactive elements
+      let cursorState = 'default'; // Track cursor state: 'default', 'hover', 'text'
+      
       document.querySelectorAll('.btn, .product-card, .philosophy-card, .blueprint-card').forEach(el => {
         el.addEventListener('mouseenter', () => {
           targetScale = 1.5;
           cursorDot.style.borderColor = 'var(--accent-coral)';
+          cursorState = 'hover';
         });
 
         el.addEventListener('mouseleave', () => {
           targetScale = 1;
           cursorDot.style.borderColor = 'var(--ink)';
+          cursorState = 'default';
         });
+      });
+
+      // Track text input state
+      document.querySelectorAll('input, textarea, [contenteditable]').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursorState = 'text';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursorState = 'default';
+        });
+      });
+
+      // ===== CUPHEAD MODE: SHOOTING MECHANIC =====
+      // The finger in the cursor points at approximately 45 degrees up-left
+      // Bullet direction: normalized vector pointing where the finger points
+      const BULLET_ANGLE = 225 * (Math.PI / 180); // 225 degrees (up and to the left)
+      const BULLET_SPEED = 15;
+      const BULLET_SIZE = 12;
+      const bullets = [];
+      let isShooting = false;
+
+      // Create bullet container
+      const bulletContainer = document.createElement('div');
+      bulletContainer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; overflow: hidden;';
+      document.documentElement.appendChild(bulletContainer);
+
+      function createBullet(x, y) {
+        const bullet = document.createElement('div');
+        bullet.style.cssText = `
+          position: fixed;
+          width: ${BULLET_SIZE}px;
+          height: ${BULLET_SIZE}px;
+          background: radial-gradient(circle at 30% 30%, #fff5cc, #f4d03f 40%, #d4a017 100%);
+          border: 2px solid var(--ink);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9998;
+          box-shadow: 2px 2px 0 var(--ink-faint), inset -2px -2px 4px rgba(0,0,0,0.2);
+          transform: translate(-50%, -50%);
+        `;
+        bullet.style.left = x + 'px';
+        bullet.style.top = y + 'px';
+        bulletContainer.appendChild(bullet);
+
+        // Calculate velocity based on finger pointing direction
+        const vx = Math.cos(BULLET_ANGLE) * BULLET_SPEED;
+        const vy = Math.sin(BULLET_ANGLE) * BULLET_SPEED;
+
+        bullets.push({
+          element: bullet,
+          x: x,
+          y: y,
+          vx: vx,
+          vy: vy,
+          life: 1 // Fade out over time
+        });
+      }
+
+      function updateBullets() {
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const bullet = bullets[i];
+          
+          // Update position
+          bullet.x += bullet.vx;
+          bullet.y += bullet.vy;
+          bullet.life -= 0.01;
+          
+          bullet.element.style.left = bullet.x + 'px';
+          bullet.element.style.top = bullet.y + 'px';
+          bullet.element.style.opacity = bullet.life;
+
+          // Remove if off screen or faded
+          if (bullet.life <= 0 || 
+              bullet.x < -50 || bullet.x > window.innerWidth + 50 ||
+              bullet.y < -50 || bullet.y > window.innerHeight + 50) {
+            bullet.element.remove();
+            bullets.splice(i, 1);
+          }
+        }
+        requestAnimationFrame(updateBullets);
+      }
+      updateBullets();
+
+      // Shooting on click (only in default cursor state)
+      document.addEventListener('mousedown', (e) => {
+        if (cursorState === 'default' && !isShooting) {
+          isShooting = true;
+          
+          // Change cursor to shooting pose
+          document.body.style.cursor = 'url("media/cursors/cursor-shoot.png") 7 5, auto';
+          
+          // Create bullet at cursor position
+          // Offset slightly in the direction of the finger tip
+          const tipOffsetX = Math.cos(BULLET_ANGLE) * 25;
+          const tipOffsetY = Math.sin(BULLET_ANGLE) * 25;
+          createBullet(targetX + tipOffsetX, targetY + tipOffsetY);
+          
+          // Add visual feedback to cursor follower
+          cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%) scale(0.8)`;
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isShooting) {
+          isShooting = false;
+          // Restore default cursor
+          document.body.style.cursor = 'url("media/cursors/cursor.png") 7 5, auto';
+        }
       });
     }
   </script>
