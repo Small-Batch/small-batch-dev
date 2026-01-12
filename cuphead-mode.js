@@ -50,6 +50,7 @@
   let currentRotation = 0;
   let targetRotation = 0;
   let driftSpeed = 0.005;
+  let destroyedCount = 0; // Counter for destroyed objects
   const bullets = [];
   const particles = [];
   const destroyedElements = new Set();
@@ -108,6 +109,25 @@
     image-rendering: pixelated;
   `;
   document.documentElement.appendChild(customCursor);
+
+  // Kill counter element (displays next to cursor)
+  const killCounter = document.createElement('div');
+  killCounter.textContent = '0';
+  killCounter.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: 'Lilita One', 'Nunito', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2C3E50;
+    pointer-events: none;
+    z-index: 10002;
+    text-shadow: 2px 2px 0 #fdfdd0, -1px -1px 0 #fdfdd0, 1px -1px 0 #fdfdd0, -1px 1px 0 #fdfdd0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+  document.documentElement.appendChild(killCounter);
   
   // Activate cuphead mode (hide default cursor)
   document.body.classList.add('cuphead-mode-active');
@@ -140,6 +160,9 @@
     
     // Update custom cursor image
     customCursor.style.transform = `translate(${displayX - 7}px, ${displayY - 5}px) rotate(${currentRotation}deg)`;
+    
+    // Update kill counter position (offset to bottom-right of cursor)
+    killCounter.style.transform = `translate(${displayX + 25}px, ${displayY + 20}px)`;
     
     requestAnimationFrame(updateCursorFollower);
   }
@@ -178,12 +201,31 @@
       targetScale = 1.5;
       cursorDot.style.borderColor = 'var(--accent-coral)';
       cursorState = 'hover';
+      if (!isAiming) {
+        customCursor.src = 'media/cursors/cursor-hover.png';
+      }
     });
 
     el.addEventListener('mouseleave', () => {
       targetScale = 1;
       cursorDot.style.borderColor = 'var(--ink)';
       cursorState = 'default';
+      if (!isAiming) {
+        customCursor.src = 'media/cursors/cursor.png';
+      }
+    });
+
+    // Click state - show click cursor when pressing on interactive elements
+    el.addEventListener('mousedown', () => {
+      if (!isAiming) {
+        customCursor.src = 'media/cursors/cursor-click.png';
+      }
+    });
+
+    el.addEventListener('mouseup', () => {
+      if (!isAiming && cursorState === 'hover') {
+        customCursor.src = 'media/cursors/cursor-hover.png';
+      }
     });
   });
 
@@ -191,9 +233,15 @@
   document.querySelectorAll('input, textarea, [contenteditable]').forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursorState = 'text';
+      if (!isAiming) {
+        customCursor.src = 'media/cursors/cursor-text.png';
+      }
     });
     el.addEventListener('mouseleave', () => {
       cursorState = 'default';
+      if (!isAiming) {
+        customCursor.src = 'media/cursors/cursor.png';
+      }
     });
   });
 
@@ -387,6 +435,11 @@
     if (!el || destroyedElements.has(el)) return;
     
     destroyedElements.add(el);
+    
+    // Increment kill counter
+    destroyedCount++;
+    killCounter.textContent = destroyedCount;
+    killCounter.style.opacity = '1';
     
     // Make element invisible but keep it in the layout
     // Using visibility: hidden preserves the element's space
