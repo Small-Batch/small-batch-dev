@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Nunito:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Caveat:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
 
   <!-- Styles -->
@@ -109,7 +109,7 @@
     </div>
     <div class="philosophy-grid">
       <div class="philosophy-card">
-        <img src="media/feather-nobg.png" alt="Feather icon" loading="lazy" />
+        <img src="media/feather-nobg.png" alt="Feather icon" loading="lazy" class="icon-feather" />
         <h3>Zero Bloat</h3>
         <p>
           We build "Papercut Solvers." One app, one purpose. No feature creep,
@@ -117,7 +117,7 @@
         </p>
       </div>
       <div class="philosophy-card">
-        <img src="media/padlock-nobg.png" alt="Padlock icon" loading="lazy" />
+        <img src="media/padlock-nobg.png" alt="Padlock icon" loading="lazy" class="icon-lock" />
         <h3>Privacy First</h3>
         <p>
           Your data stays in your Jira instance. We use Atlassian Forge—no
@@ -125,7 +125,7 @@
         </p>
       </div>
       <div class="philosophy-card">
-        <img src="media/heart-nobg.png" alt="Heart icon" loading="lazy" />
+        <img src="media/heart-nobg.png" alt="Heart icon" loading="lazy" class="icon-heart" />
         <h3>Human-Centric</h3>
         <p>
           Built by a Game Producer for actual humans—not "Enterprise
@@ -133,7 +133,7 @@
         </p>
       </div>
       <div class="philosophy-card">
-        <img src="media/spark-nobg.png" alt="Spark icon" loading="lazy" />
+        <img src="media/spark-nobg.png" alt="Spark icon" loading="lazy" class="icon-spark" />
         <h3>Playful Utility</h3>
         <p>
           Professional tools don't have to be boring. We add a touch of
@@ -397,7 +397,8 @@
       rootMargin: "0px 0px -50px 0px",
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    // Observer for product and blueprint cards (slideUp animation)
+    const slideUpObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.style.animation = "slideUp 0.6s ease-out forwards";
@@ -406,11 +407,46 @@
     }, observerOptions);
 
     document
-      .querySelectorAll(".philosophy-card, .product-card, .blueprint-card")
+      .querySelectorAll(".product-card, .blueprint-card")
       .forEach((el) => {
         el.style.opacity = "0";
-        observer.observe(el);
+        slideUpObserver.observe(el);
       });
+
+    // Scroll-triggered philosophy cards - one by one as user scrolls
+    const philosophySection = document.querySelector(".philosophy");
+    const philosophyCards = document.querySelectorAll(".philosophy-card");
+
+    if (philosophySection && philosophyCards.length > 0) {
+      const revealCard = () => {
+        const sectionRect = philosophySection.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // Calculate how far into the section we've scrolled (0 to 1)
+        const sectionTop = sectionRect.top;
+        const sectionHeight = sectionRect.height;
+
+        // Start revealing when section top reaches 80% of viewport
+        // Finish revealing all cards when section top reaches 20% of viewport
+        const startTrigger = windowHeight * 0.8;
+        const endTrigger = windowHeight * 0.2;
+        const scrollRange = startTrigger - endTrigger;
+
+        // Progress from 0 (just entering) to 1 (fully scrolled through trigger zone)
+        const progress = Math.max(0, Math.min(1, (startTrigger - sectionTop) / scrollRange));
+
+        // Reveal cards based on progress
+        philosophyCards.forEach((card, index) => {
+          const cardThreshold = index / philosophyCards.length;
+          if (progress > cardThreshold && !card.classList.contains("slide-in")) {
+            card.classList.add("slide-in");
+          }
+        });
+      };
+
+      window.addEventListener("scroll", revealCard, { passive: true });
+      revealCard(); // Check on load in case already scrolled
+    }
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
