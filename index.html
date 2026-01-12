@@ -72,6 +72,10 @@
       <img class="navbar-logo" src="media/small-batch-box.png" alt="Small Batch Apps logo" />
       <span class="logo-text">Small Batch Apps</span>
     </a>
+    <!-- Global shooting stats (centered) -->
+    <div class="nav-stats" id="global-stats">
+      ✴ <span id="stats-today">0</span> shots fired today
+    </div>
     <ul class="nav-links">
       <li><a href="#products">Products</a></li>
       <li><a href="#workshop">Workshop</a></li>
@@ -376,10 +380,6 @@
         © 2026 Small Batch Apps. Crafted with <span class="heart" data-destructible data-hp="10">♥</span> in
         Lviv, <span data-destructible data-hp="999">Ukraine</span>.
       </p>
-      <!-- Global shooting stats -->
-      <p class="global-stats" id="global-stats">
-        🎯 <span id="stats-today">0</span> shots fired today by all visitors
-      </p>
     </div>
   </footer>
 
@@ -582,10 +582,32 @@
       el.style.setProperty('--underline-offset', `${offset}em`);
     });
 
+    // Navbar scroll behavior
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbar = document.querySelector('nav');
+      if (navbar) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 50) { // Lower threshold slightly
+            navbar.classList.add('minimized');
+          } else {
+            navbar.classList.remove('minimized');
+          }
+        }, { passive: true });
+        
+        // Check initial state
+        if (window.scrollY > 50) navbar.classList.add('minimized');
+      } else {
+        console.error('Navbar element not found!');
+      }
+    });
+
   </script>
 
   <!-- Cuphead Mode: Interactive cursor effects and shooting mechanics -->
   <script src="cuphead-mode.js"></script>
+
+  <!-- Vintage flicker overlay -->
+  <div class="vintage-overlay"></div>
 </body>
 
 </html>

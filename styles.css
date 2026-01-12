@@ -57,9 +57,9 @@ body {
   overflow-x: hidden;
   cursor: url("media/cursors/cursor.png") 7 5,
     auto;
-  /* Vintage screen flicker */
-  animation: vintageFlicker 8s infinite;
-  will-change: filter;
+  /* Vintage screen flicker removed to fix fixed positioning */
+  /* animation: vintageFlicker 8s infinite; */
+  /* will-change: filter; */
   /* Scanlines across entire page                                                                                                                 
   background-image: repeating-linear-gradient(                                                                                                       
     0deg,                                                                                                                                            
@@ -84,6 +84,19 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   /* Vignette effect for old film look */
   box-shadow: inset 0 0 200px 100px rgba(0, 0, 0, 0.3);
+}
+
+/* vintage overlay for flicker effect */
+.vintage-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997; /* Below bullet container (9998) */
+  animation: vintageFlicker 8s infinite;
+  /* Use backdrop-filter or opacity on a pseudo-white background */
+  /* backdrop-filter works best but might affect performance/fixed pos again? 
+     No, applied to overlay it's fine. */
+  backdrop-filter: brightness(1); 
 }
 
 /* ===== ANIMATED FILM GRAIN OVERLAY ===== */
@@ -542,8 +555,65 @@ nav {
   transition: width 0.3s ease;
 }
 
-.nav-links a:hover::after {
-  width: 100%;
+/* Navbar Stats */
+.nav-stats {
+  font-family: var(--font-handwritten);
+  font-size: 1.2rem;
+  color: var(--ink-light);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  
+  /* Absolute centering */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-stats #stats-today {
+  color: var(--accent-coral);
+  font-weight: 700;
+}
+
+/* Minimized Navbar State */
+/* Minimized Navbar State */
+nav.minimized {
+  padding: 0 2rem; /* Reduced vertical padding to 0 */
+  /* Keep justify-content: space-between (inherited) so items don't collide */
+  background: rgba(253, 253, 208, 0.95);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  /* Force height to be determined by the only visible child (stats) */
+  min-height: 40px; 
+}
+
+nav.minimized .logo,
+nav.minimized .nav-links {
+  opacity: 0 !important;
+  transform: scale(0.9);
+  pointer-events: none;
+  visibility: hidden; 
+  /* Collapse layout space */
+  max-width: 0;
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+  /* Transition layout properties with a slight delay so they fade out first */
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s, 
+              max-width 0.3s ease 0.1s, max-height 0.3s ease 0.1s, margin 0.3s ease 0.1s;
+}
+
+nav .logo,
+nav .nav-links {
+  /* Restore visible state properties */
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  max-width: 500px; /* Arbitrary large value for transition */
+  max-height: 100px;
+  margin: 0; /* Reset margins if needed */
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s,
+              max-width 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 }
 
 /* ===== HERO SECTION ===== */
