@@ -49,6 +49,7 @@
   let targetScale = 1;
   let currentRotation = 0;
   let targetRotation = 0;
+  let driftSpeed = 0.005;
   const bullets = [];
   const particles = [];
   const destroyedElements = new Set();
@@ -127,8 +128,8 @@
     let displayX, displayY;
     if (isAiming) {
       // While aiming: cursor barely moves, very slow drift toward mouse
-      aimCursorX += (targetX - aimCursorX) * 0.02; // Very slow drift
-      aimCursorY += (targetY - aimCursorY) * 0.02;
+      aimCursorX += (targetX - aimCursorX) * driftSpeed; // Very slow drift
+      aimCursorY += (targetY - aimCursorY) * driftSpeed;
       displayX = aimCursorX;
       displayY = aimCursorY;
     } else {
