@@ -145,6 +145,7 @@ h3,
 
 /* Heart: beating pulse */
 @keyframes heartbeat {
+
   0%,
   100% {
     transform: scale(1);
@@ -219,6 +220,7 @@ h3,
 
 /* Lock: shake like "action not possible" */
 @keyframes lockShake {
+
   0%,
   100% {
     transform: translateX(0);
@@ -388,6 +390,49 @@ nav {
   background: var(--pastel-lemon);
   z-index: -1;
   transform: rotate(-1deg);
+}
+
+/* ===== HANDWRITTEN UNDERLINES ===== */
+.hand-underline {
+  position: relative;
+  display: inline;
+  --underline-color: var(--ink);
+  --underline-offset: 0.1em;
+  --underline-rotation: 0deg;
+  background-repeat: repeat-x;
+  background-size: auto 0.15em;
+  background-position: left bottom;
+  padding-bottom: 0.05em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Wavy underline variant 1 - gentle wave */
+.hand-underline.wave-1 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3 Q5 1, 10 3 T20 3 T30 3 T40 3' fill='none' stroke='%235D6D7E' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Wavy underline variant 2 - more pronounced wave */
+.hand-underline.wave-2 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8' preserveAspectRatio='none'%3E%3Cpath d='M0 4 Q7 1, 13 4 T26 4 T40 4' fill='none' stroke='%235D6D7E' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: auto 0.2em;
+}
+
+/* Wavy underline variant 3 - subtle squiggle */
+.hand-underline.wave-3 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3 Q8 1.5, 12 3 T25 3 T38 3 T50 3' fill='none' stroke='%235D6D7E' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Wavy underline variant 4 - rough/sketchy */
+.hand-underline.wave-4 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 45 7' preserveAspectRatio='none'%3E%3Cpath d='M0 3.5 Q4 2, 9 4 Q14 5, 18 3 Q23 1.5, 28 3.5 Q33 5, 37 3 Q41 1.5, 45 3' fill='none' stroke='%235D6D7E' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: auto 0.18em;
+}
+
+/* Wavy underline variant 5 - double line */
+.hand-underline.wave-5 {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10' preserveAspectRatio='none'%3E%3Cpath d='M0 3 Q6 1.5, 12 3 T24 3 T36 3 L40 3' fill='none' stroke='%235D6D7E' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M0 7 Q8 5, 14 7 T28 7 T40 7' fill='none' stroke='%235D6D7E' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: auto 0.25em;
 }
 
 .hero-tagline {

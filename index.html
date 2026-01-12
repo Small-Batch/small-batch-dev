@@ -86,8 +86,7 @@
       for Jira Cloud
     </h1>
     <p class="hero-tagline">
-      Small batch. Big impact. We build focused, elegant plugins that solve
-      real problems—without the bloat.
+      Small batch. Big impact. We build focused, elegant plugins that solve real problems — without the bloat.
     </p>
     <div class="hero-cta">
       <a href="#products" class="btn btn-primary">
@@ -112,24 +111,24 @@
         <img src="media/feather-nobg.png" alt="Feather icon" loading="lazy" class="icon-feather" />
         <h3>Zero Bloat</h3>
         <p>
-          We build "Papercut Solvers." One app, one purpose. No feature creep,
-          no enterprise fluff—just tools that do exactly what you need.
+          We build "papercut solvers." <span class="hand-underline">One app, one
+            purpose</span>. No feature creep, no enterprise fluff — just tools that do exactly what you need.
         </p>
       </div>
       <div class="philosophy-card">
         <img src="media/padlock-nobg.png" alt="Padlock icon" loading="lazy" class="icon-lock" />
         <h3>Privacy First</h3>
         <p>
-          Your data stays in your Jira instance. We use Atlassian Forge—no
-          external databases, no data harvesting. Period.
+          Your data stays in your Jira instance. We use Atlassian Forge — <span class="hand-underline">no
+            external databases</span>, no data harvesting. Period.
         </p>
       </div>
       <div class="philosophy-card">
         <img src="media/heart-nobg.png" alt="Heart icon" loading="lazy" class="icon-heart" />
         <h3>Human-Centric</h3>
         <p>
-          Built by a Game Producer for actual humans—not "Enterprise
-          Resources." Tools should make your day easier, not harder.
+          Built for <span class="hand-underline">actual humans</span> — not "enterprise resources."
+          Tools should make your day easier, not harder.
         </p>
       </div>
       <div class="philosophy-card">
@@ -137,7 +136,7 @@
         <h3>Playful Utility</h3>
         <p>
           Professional tools don't have to be boring. We add a touch of
-          personality because work should spark joy, not dread.
+          personality because work should <span class="hand-underline">spark joy</span>, not dread.
         </p>
       </div>
     </div>
@@ -262,7 +261,7 @@
             <li>Audit trail & history</li>
           </ul>
           <div class="product-cta">
-            <a href="#" class="btn btn-secondary">Coming in January 2026</a>
+            <a class="btn btn-secondary">Coming in January 2026</a>
           </div>
         </div>
       </div>
@@ -333,20 +332,20 @@
         <h3>Hello, I'm Vitalii!</h3>
         <p>
           By day, I'm a Senior Game Producer navigating the chaos of game
-          development. By night (and weekends), I build the tools I wish I
-          had.
+          development. By night (and weekends), I build the <span class="hand-underline">tools I wish I
+            had</span>.
         </p>
         <p>
           Every app in the Small Batch suite is born from my own project
           management experience. I don't build tools just to exist—I build
-          each one to address a very specific pain point that I've experienced
+          each one to address a <span class="hand-underline">very specific pain point</span> that I've experienced
           myself. These are tools I use daily and wish I always had.
         </p>
         <p>
           After years of wrestling with bloated enterprise plugins that
           promise everything and deliver complexity, I decided to take matters
           into my own hands. The "Simple" suite is my answer: focused tools
-          that do one thing brilliantly.
+          that <span class="hand-underline">do one thing brilliantly.
         </p>
         <p>
           Every app is hand-crafted with the same care I put into shipping
@@ -460,6 +459,21 @@
           });
         }
       });
+    });
+
+    // Randomize handwritten underlines
+    document.querySelectorAll('.hand-underline').forEach((el) => {
+      // Pick a random wave variant (1-5)
+      const waveVariant = Math.floor(Math.random() * 5) + 1;
+      el.classList.add(`wave-${waveVariant}`);
+
+      // Add slight random rotation (-1 to 1 degrees)
+      const rotation = (Math.random() - 0.5) * 2;
+      el.style.setProperty('--underline-rotation', `${rotation}deg`);
+
+      // Add slight random offset variation
+      const offset = -0.05 + Math.random() * 0.1;
+      el.style.setProperty('--underline-offset', `${offset}em`);
     });
   </script>
 </body>
