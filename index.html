@@ -376,8 +376,65 @@
         © 2026 Small Batch Apps. Crafted with <span class="heart" data-destructible data-hp="10">♥</span> in
         Lviv, <span data-destructible data-hp="999">Ukraine</span>.
       </p>
+      <!-- Global shooting stats -->
+      <p class="global-stats" id="global-stats">
+        🎯 <span id="stats-today">0</span> shots fired today by all visitors
+      </p>
     </div>
   </footer>
+
+  <!-- Firebase SDK (for global stats) -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js';
+    import { getDatabase, ref, onValue, runTransaction } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js';
+    
+    // TODO: Replace with your Firebase config from Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzAtqyhDll-G8oqo5Y-xMue0c1q2HEie0",
+      authDomain: "small-batch-dev.firebaseapp.com",
+      projectId: "small-batch-dev",
+      storageBucket: "small-batch-dev.firebasestorage.app",
+      messagingSenderId: "168244315088",
+      appId: "1:168244315088:web:38caa2eff74bfdf839efd5",
+      measurementId: "G-KD420GEK5J",
+      databaseURL: "https://small-batch-dev-default-rtdb.europe-west1.firebasedatabase.app/",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const analytics = getAnalytics(app);
+
+    // Get today's date key (YYYY-MM-DD)
+    function getTodayKey() {
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    }
+
+    // Reference to today's shot counter
+    const todayRef = ref(db, `shots/${getTodayKey()}`);
+
+    // Listen for real-time updates
+    onValue(todayRef, (snapshot) => {
+      const count = snapshot.val() || 0;
+      document.getElementById('stats-today').textContent = count.toLocaleString();
+    });
+
+    // Expose increment function globally for cuphead-mode.js to use
+    // Only count shots from production domain (not localhost or file://)
+    const isProduction = window.location.hostname === 'small-batch.dev' || 
+                         window.location.hostname === 'www.small-batch.dev';
+    
+    window.incrementGlobalShots = function() {
+      if (!isProduction) return; // Skip counting on local development
+      
+      runTransaction(todayRef, (current) => {
+        return (current || 0) + 1;
+      });
+    };
+  </script>
 
   <script>
     // ===== CUPHEAD MODE: SPRING PHYSICS CLASS =====

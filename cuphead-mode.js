@@ -276,6 +276,11 @@
       vy: vy,
       life: 1
     });
+
+    // Increment global shot counter (Firebase)
+    if (typeof window.incrementGlobalShots === 'function') {
+      window.incrementGlobalShots();
+    }
   }
 
   // ===== PARTICLE EXPLOSION =====

@@ -1403,6 +1403,20 @@ footer {
   animation: rubberBounce 1s ease-in-out infinite;
 }
 
+/* Global shooting stats */
+.global-stats {
+  font-family: var(--font-handwritten);
+  font-size: 1.1rem;
+  color: var(--ink-light);
+  margin-top: 1.5rem;
+  opacity: 0.7;
+}
+
+.global-stats #stats-today {
+  font-weight: 700;
+  color: var(--ink);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
   .philosophy-grid {
