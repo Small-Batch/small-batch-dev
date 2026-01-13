@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "shots": {
+      ".read": true,
+      "$date": {
+        // Allow anyone to increment the counter using a transaction
+        ".write": "newData.isNumber() && (!data.exists() || newData.val() == data.val() + 1)"
+      }
+    }
+  }
+}
