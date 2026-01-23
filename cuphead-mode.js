@@ -3,7 +3,7 @@
  * You won if you're reading this!
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Only enable on desktop with mouse
@@ -58,7 +58,7 @@
   let gameStarted = false; // Track if game has started in current session
 
   // ===== CREATE DOM ELEMENTS =====
-  
+
   // Cursor follower circle
   const cursorDot = document.createElement('div');
   cursorDot.className = 'cursor-follower';
@@ -129,12 +129,12 @@
     transition: opacity 0.3s ease;
   `;
   document.documentElement.appendChild(killCounter);
-  
+
   // Activate cuphead mode (hide default cursor)
   document.body.classList.add('cuphead-mode-active');
 
   // ===== CURSOR FOLLOWER =====
-  
+
   function updateCursorFollower() {
     // Smooth following for the circle only
     cursorX += (targetX - cursorX) * 0.15;
@@ -144,7 +144,7 @@
 
     // Update cursor follower circle (smooth/lagging for effect)
     cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%) scale(${currentScale})`;
-    
+
     // Determine cursor display position
     let displayX, displayY;
     if (isAiming) {
@@ -158,33 +158,33 @@
       displayX = targetX;
       displayY = targetY;
     }
-    
+
     // Update custom cursor image
     customCursor.style.transform = `translate(${displayX - 7}px, ${displayY - 5}px) rotate(${currentRotation}deg)`;
-    
+
     // Update kill counter position (offset to bottom-right of cursor)
     killCounter.style.transform = `translate(${displayX + 25}px, ${displayY + 20}px)`;
-    
+
     requestAnimationFrame(updateCursorFollower);
   }
 
   document.addEventListener('mousemove', (e) => {
     targetX = e.clientX;
     targetY = e.clientY;
-    
+
     // If aiming, calculate rotation angle based on drag direction
     if (isAiming) {
       const dx = e.clientX - aimStartX;
       const dy = e.clientY - aimStartY;
-      
+
       // Only rotate if dragged enough distance
       if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
         // Calculate angle from start point to current mouse position
         const dragAngle = Math.atan2(dy, dx);
-        
+
         // The cursor's default pointing direction is 225° (up-left)
         currentAimAngle = dragAngle;
-        
+
         // To make finger point at drag direction: rotate by (dragAngle - defaultAngle)
         // Default finger direction is 225°, so we subtract that
         targetRotation = (dragAngle * 180 / Math.PI) - 225;
@@ -195,7 +195,7 @@
   updateCursorFollower();
 
   // ===== CURSOR STATE TRACKING =====
-  
+
   // Interactive elements - hover state (only actual clickable elements)
   document.querySelectorAll('.btn, .nav-links a, .footer-links a').forEach(el => {
     el.addEventListener('mouseenter', () => {
@@ -247,7 +247,7 @@
   });
 
   // ===== BULLET CREATION =====
-  
+
   function createBullet(x, y, angle = CONFIG.bullet.angle) {
     const bullet = document.createElement('div');
     bullet.style.cssText = `
@@ -291,17 +291,19 @@
           device: 'desktop'
         });
       }
+
+      posthog.capture('game_start', { device: 'desktop' });
     }
   }
 
   // ===== PARTICLE EXPLOSION =====
-  
+
   function createExplosion(x, y) {
     for (let i = 0; i < CONFIG.particles.count; i++) {
       const particle = document.createElement('div');
       const size = CONFIG.particles.size.min + Math.random() * (CONFIG.particles.size.max - CONFIG.particles.size.min);
       const color = CONFIG.particles.colors[Math.floor(Math.random() * CONFIG.particles.colors.length)];
-      
+
       particle.style.cssText = `
         position: fixed;
         width: ${size}px;
@@ -334,30 +336,30 @@
   }
 
   // ===== COLLISION DETECTION =====
-  
+
   function isElementVisible(el) {
     if (!el || el === document.documentElement || el === document.body) return false;
-    
+
     const style = window.getComputedStyle(el);
     if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0) {
       return false;
     }
-    
+
     const rect = el.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) {
       return false;
     }
-    
+
     return true;
   }
 
   function isDestroyable(el) {
     // Only destroy elements explicitly marked as destructible
     if (!el.hasAttribute('data-destructible')) return false;
-    
+
     // Don't destroy already destroyed elements
     if (destroyedElements.has(el)) return false;
-    
+
     return true;
   }
 
@@ -368,14 +370,14 @@
       particle: particleContainer.style.pointerEvents,
       cursor: cursorDot.style.pointerEvents
     };
-    
+
     bulletContainer.style.pointerEvents = 'none';
     particleContainer.style.pointerEvents = 'none';
     cursorDot.style.pointerEvents = 'none';
 
     // Get all elements at point
     const elements = document.elementsFromPoint(x, y);
-    
+
     // Restore pointer events
     bulletContainer.style.pointerEvents = originalPointerEvents.bullet;
     particleContainer.style.pointerEvents = originalPointerEvents.particle;
@@ -387,7 +389,7 @@
         return el;
       }
     }
-    
+
     return null;
   }
 
@@ -410,14 +412,14 @@
     // Store original styles
     const originalFilter = el.style.filter;
     const originalTransform = el.style.transform;
-    
+
     // Apply red glow and shake
     el.style.transition = 'none';
     el.style.filter = 'brightness(1.5) sepia(1) hue-rotate(-50deg) saturate(3)';
-    
+
     // Shake animation using CSS animation
     el.style.animation = 'cuphead-hit-shake 0.15s ease-out';
-    
+
     // Reset after animation
     setTimeout(() => {
       el.style.filter = originalFilter;
@@ -428,14 +430,14 @@
   // Damage an element, returns true if destroyed
   function damageElement(el, bulletX, bulletY) {
     if (!el || destroyedElements.has(el)) return false;
-    
+
     const currentHP = getElementHP(el);
     const newHP = currentHP - 1;
     elementHP.set(el, newHP);
-    
+
     // Create small particle burst at impact
     createExplosion(bulletX, bulletY);
-    
+
     if (newHP <= 0) {
       // Element is destroyed
       destroyElement(el);
@@ -449,19 +451,19 @@
 
   function destroyElement(el) {
     if (!el || destroyedElements.has(el)) return;
-    
+
     destroyedElements.add(el);
-    
+
     // Increment kill counter
     destroyedCount++;
     killCounter.textContent = destroyedCount;
     killCounter.style.opacity = '1';
-    
+
     // Make element invisible but keep it in the layout
     // Using visibility: hidden preserves the element's space
     el.style.transition = 'opacity 0.2s ease-out';
     el.style.opacity = '0';
-    
+
     // After fade out, set visibility to hidden to ensure it doesn't receive events
     setTimeout(() => {
       el.style.visibility = 'hidden';
@@ -474,40 +476,45 @@
         element_type: el.tagName.toLowerCase(),
         element_identifier: elementId
       });
+
+      posthog.capture('element_destroyed', {
+        element_type: el.tagName.toLowerCase(),
+        element_identifier: elementId
+      });
     }
   }
 
   // ===== UPDATE LOOPS =====
-  
+
   function updateBullets() {
     for (let i = bullets.length - 1; i >= 0; i--) {
       const bullet = bullets[i];
-      
+
       // Check for collision before moving
       const hitElement = getElementAtPoint(bullet.x, bullet.y);
       if (hitElement) {
         // Damage the element (subtracts 1 HP)
         damageElement(hitElement, bullet.x, bullet.y);
-        
+
         // Remove the bullet
         bullet.element.remove();
         bullets.splice(i, 1);
         continue;
       }
-      
+
       // Update position
       bullet.x += bullet.vx;
       bullet.y += bullet.vy;
       bullet.life -= CONFIG.bullet.fadeRate;
-      
+
       bullet.element.style.left = bullet.x + 'px';
       bullet.element.style.top = bullet.y + 'px';
       bullet.element.style.opacity = bullet.life;
 
       // Remove if off screen or faded
-      if (bullet.life <= 0 || 
-          bullet.x < -50 || bullet.x > window.innerWidth + 50 ||
-          bullet.y < -50 || bullet.y > window.innerHeight + 50) {
+      if (bullet.life <= 0 ||
+        bullet.x < -50 || bullet.x > window.innerWidth + 50 ||
+        bullet.y < -50 || bullet.y > window.innerHeight + 50) {
         bullet.element.remove();
         bullets.splice(i, 1);
       }
@@ -518,17 +525,17 @@
   function updateParticles() {
     for (let i = particles.length - 1; i >= 0; i--) {
       const particle = particles[i];
-      
+
       // Update position with gravity
       particle.vy += particle.gravity;
       particle.x += particle.vx;
       particle.y += particle.vy;
       particle.life -= 0.02;
-      
+
       // Slow down
       particle.vx *= 0.98;
       particle.vy *= 0.98;
-      
+
       particle.element.style.left = particle.x + 'px';
       particle.element.style.top = particle.y + 'px';
       particle.element.style.opacity = particle.life;
@@ -548,12 +555,12 @@
 
   // ===== SHOOTING MECHANICS =====
   // Click and hold to aim, drag to rotate, release to shoot
-  
+
   document.addEventListener('mousedown', (e) => {
     if (cursorState === 'default' && !isAiming) {
       // Prevent text/image selection when aiming
       e.preventDefault();
-      
+
       // Start aiming - lock cursor position
       isAiming = true;
       aimStartX = e.clientX;
@@ -561,10 +568,10 @@
       aimCursorX = e.clientX; // Lock cursor at current position
       aimCursorY = e.clientY;
       currentAimAngle = CONFIG.bullet.angle; // Reset to default angle
-      
+
       // Change cursor to shooting pose
       customCursor.src = 'media/cursors/cursor-shoot.png';
-      
+
       // Visual feedback - scale down slightly while aiming
       targetScale = 0.9;
     }
@@ -576,18 +583,18 @@
       const tipOffsetX = Math.cos(currentAimAngle) * 25;
       const tipOffsetY = Math.sin(currentAimAngle) * 25;
       createBullet(aimCursorX + tipOffsetX, aimCursorY + tipOffsetY, currentAimAngle);
-      
+
       // Brief recoil effect
       targetScale = 0.7;
       setTimeout(() => {
         targetScale = 1;
       }, 100);
-      
+
       // Reset aiming state
       isAiming = false;
       targetRotation = 0; // Reset rotation
       currentAimAngle = CONFIG.bullet.angle; // Reset to default
-      
+
       // Restore default cursor
       customCursor.src = 'media/cursors/cursor.png';
     }
@@ -595,5 +602,5 @@
 
   // Log for debugging
   console.log('🎮 Cuphead Mode activated! Click and drag to aim, release to shoot!');
-  
+
 })();
